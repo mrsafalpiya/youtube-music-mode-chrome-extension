@@ -54,6 +54,16 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const result = await chrome.storage.session.get(key);
         if (result[key]) {
             updateBadge(tabId, true);
+
+            // Safety: ensure content script is in sync
+            try {
+                chrome.tabs.sendMessage(tabId, {
+                    action: 'toggleMusicMode',
+                    enabled: true
+                });
+            } catch (e) {
+                // Content script might not be initialized yet
+            }
         }
     }
 });

@@ -176,7 +176,8 @@
     }
 
     // Use YouTube's custom event for SPA navigation
-    window.addEventListener('yt-navigate-finish', () => {
+    window.addEventListener('yt-navigate-finish', async () => {
+        await checkInitialState();
         if (musicModeEnabled) {
             // Re-apply quality and button on navigation
             setTimeout(setLowestQuality, 1000);
@@ -194,18 +195,23 @@
                 const result = await chrome.storage.session.get(key);
                 if (result[key]) {
                     musicModeEnabled = true;
-                    enableMusicMode();
+                    // Ensure CSS classes are added
+                    document.documentElement.classList.add('yt-music-mode');
+                    document.documentElement.classList.add('yt-video-hidden');
+
+                    // Trigger applied features
+                    setLowestQuality();
+                    injectVideoToggleButton();
+                } else {
+                    musicModeEnabled = false;
                 }
             }
         } catch (e) {
-            // Extension context might not be available
+            // Extension context might not be available yet, retry once
+            setTimeout(checkInitialState, 1000);
         }
     }
 
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', checkInitialState);
-    } else {
-        checkInitialState();
-    }
+    // Initialize
+    checkInitialState();
 })();
