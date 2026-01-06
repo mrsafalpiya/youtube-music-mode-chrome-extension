@@ -4,6 +4,7 @@
     'use strict';
 
     let musicModeEnabled = false;
+    let videoVisible = false;
 
     // Listen for messages from popup
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -21,7 +22,12 @@
 
     function enableMusicMode() {
         document.documentElement.classList.add('yt-music-mode');
+        document.documentElement.classList.add('yt-video-hidden');
+        document.documentElement.classList.remove('yt-video-visible');
+        videoVisible = false;
+
         setLowestQuality();
+        injectVideoToggleButton();
 
         // Re-apply quality when video changes (YouTube SPA navigation)
         observeVideoChanges();
@@ -29,9 +35,77 @@
 
     function disableMusicMode() {
         document.documentElement.classList.remove('yt-music-mode');
+        document.documentElement.classList.remove('yt-video-hidden');
+        document.documentElement.classList.remove('yt-video-visible');
+        removeVideoToggleButton();
+
         if (qualityObserver) {
             qualityObserver.disconnect();
             qualityObserver = null;
+        }
+    }
+
+    function injectVideoToggleButton() {
+        // Remove existing button if any
+        removeVideoToggleButton();
+
+        // Target the video title header
+        const titleH1 = document.querySelector('ytd-watch-metadata #title h1') ||
+            document.querySelector('#title h1') ||
+            document.querySelector('h1.ytd-watch-metadata');
+
+        if (!titleH1) {
+            // Retry if title not loaded yet
+            setTimeout(injectVideoToggleButton, 500);
+            return;
+        }
+
+        // Create toggle container
+        const toggleContainer = document.createElement('div');
+        toggleContainer.id = 'yt-music-mode-toggle-container';
+
+        // Create toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.id = 'yt-music-mode-video-toggle';
+        toggleBtn.innerHTML = '<span class="toggle-icon">👁️</span> <span class="toggle-text">Show Video</span>';
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            videoVisible = !videoVisible;
+            updateVideoVisibility();
+        });
+
+        toggleContainer.appendChild(toggleBtn);
+
+        // Insert after the title h1 (in the flow of the title)
+        titleH1.after(toggleContainer);
+    }
+
+    function removeVideoToggleButton() {
+        const existing = document.getElementById('yt-music-mode-toggle-container');
+        if (existing) {
+            existing.remove();
+        }
+    }
+
+    function updateVideoVisibility() {
+        const toggleBtn = document.getElementById('yt-music-mode-video-toggle');
+
+        if (videoVisible) {
+            document.documentElement.classList.remove('yt-video-hidden');
+            document.documentElement.classList.add('yt-video-visible');
+            if (toggleBtn) {
+                toggleBtn.classList.add('video-visible');
+                toggleBtn.innerHTML = '<span class="toggle-icon">👁️</span> <span class="toggle-text">Hide Video</span>';
+            }
+        } else {
+            document.documentElement.classList.add('yt-video-hidden');
+            document.documentElement.classList.remove('yt-video-visible');
+            if (toggleBtn) {
+                toggleBtn.classList.remove('video-visible');
+                toggleBtn.innerHTML = '<span class="toggle-icon">👁️</span> <span class="toggle-text">Show Video</span>';
+            }
         }
     }
 

@@ -2,39 +2,104 @@
 /* Only applied when .yt-music-mode class is on <html> */
 
 /* ============================================
-   HIDE VIDEO, SHOW CONTROLS ONLY
+   SMALL VIDEO PLAYER
    ============================================ */
 
-/* Hide the video element itself but keep the player wrapper for controls */
+/* Make the player container smaller */
+.yt-music-mode #player-container-outer,
+.yt-music-mode #player-container-inner,
+.yt-music-mode #player-container {
+    max-height: 200px !important;
+    min-height: 100px !important;
+}
+
+.yt-music-mode #movie_player {
+    max-height: 200px !important;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%) !important;
+}
+
 .yt-music-mode video {
+    max-height: 200px !important;
+}
+
+/* ============================================
+   HIDE/SHOW VIDEO TOGGLE
+   ============================================ */
+
+/* When video is hidden (default in music mode) */
+.yt-music-mode.yt-video-hidden video {
     opacity: 0 !important;
     pointer-events: none !important;
 }
 
-/* Keep controls visible */
+/* When video is visible */
+.yt-music-mode.yt-video-visible video {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Keep controls always visible */
 .yt-music-mode .ytp-chrome-bottom {
     opacity: 1 !important;
     visibility: visible !important;
 }
 
-/* Show a placeholder background where video was */
-.yt-music-mode #movie_player {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%) !important;
-}
-
-/* Add a music visualization placeholder */
-.yt-music-mode #movie_player::before {
+/* Add a music visualization placeholder when hidden */
+.yt-music-mode.yt-video-hidden #movie_player::before {
     content: '🎵 Music Mode Active';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 24px;
+    font-size: 18px;
     color: rgba(255, 255, 255, 0.3);
     z-index: 1;
     pointer-events: none;
     text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============================================
+   VIDEO TOGGLE BUTTON STYLING
+   ============================================ */
+
+#yt-music-mode-toggle-container {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 0;
+    margin: 8px 0;
+    position: relative;
+    z-index: 10;
+}
+
+#yt-music-mode-video-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #272727;
+    /* Dark YouTube button color */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#yt-music-mode-video-toggle:hover {
+    background: #3f3f3f;
+}
+
+#yt-music-mode-video-toggle.video-visible {
+    background: #cc0000;
+    border-color: #ff0000;
+}
+
+#yt-music-mode-video-toggle .toggle-icon {
+    font-size: 16px;
 }
 
 /* Related videos in sidebar (watch page) - NEW YouTube structure */
