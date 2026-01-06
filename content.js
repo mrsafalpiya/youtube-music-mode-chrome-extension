@@ -28,9 +28,6 @@
 
         setLowestQuality();
         injectVideoToggleButton();
-
-        // Re-apply quality when video changes (YouTube SPA navigation)
-        observeVideoChanges();
     }
 
     function disableMusicMode() {
@@ -38,11 +35,6 @@
         document.documentElement.classList.remove('yt-video-hidden');
         document.documentElement.classList.remove('yt-video-visible');
         removeVideoToggleButton();
-
-        if (qualityObserver) {
-            qualityObserver.disconnect();
-            qualityObserver = null;
-        }
     }
 
     function injectVideoToggleButton() {
@@ -183,42 +175,14 @@
         }, 500);
     }
 
-    // Observe for video changes (YouTube SPA navigation)
-    let qualityObserver = null;
-
-    function observeVideoChanges() {
-        if (qualityObserver) return;
-
-        qualityObserver = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.type === 'childList') {
-                    const hasVideoChange = Array.from(mutation.addedNodes).some(
-                        node => node.nodeName === 'VIDEO' ||
-                            (node.querySelector && node.querySelector('video'))
-                    );
-                    if (hasVideoChange && musicModeEnabled) {
-                        setTimeout(setLowestQuality, 1000);
-                    }
-                }
-            }
-        });
-
-        qualityObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // Also observe URL changes for SPA navigation
-        let lastUrl = location.href;
-        new MutationObserver(() => {
-            if (location.href !== lastUrl) {
-                lastUrl = location.href;
-                if (musicModeEnabled) {
-                    setTimeout(setLowestQuality, 1500);
-                }
-            }
-        }).observe(document.body, { subtree: true, childList: true });
-    }
+    // Use YouTube's custom event for SPA navigation
+    window.addEventListener('yt-navigate-finish', () => {
+        if (musicModeEnabled) {
+            // Re-apply quality and button on navigation
+            setTimeout(setLowestQuality, 1000);
+            setTimeout(injectVideoToggleButton, 1000);
+        }
+    });
 
     // Check if music mode should be enabled on page load
     async function checkInitialState() {
