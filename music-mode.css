@@ -1,0 +1,235 @@
+/* YouTube Music Mode Styles */
+/* Only applied when .yt-music-mode class is on <html> */
+
+/* ============================================
+   HIDE VIDEO, SHOW CONTROLS ONLY
+   ============================================ */
+
+/* Hide the video element itself but keep the player wrapper for controls */
+.yt-music-mode video {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Keep controls visible */
+.yt-music-mode .ytp-chrome-bottom {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Show a placeholder background where video was */
+.yt-music-mode #movie_player {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%) !important;
+}
+
+/* Add a music visualization placeholder */
+.yt-music-mode #movie_player::before {
+    content: '🎵 Music Mode Active';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.3);
+    z-index: 1;
+    pointer-events: none;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Related videos in sidebar (watch page) - NEW YouTube structure */
+/* YouTube now uses yt-lockup-view-model instead of ytd-compact-video-renderer */
+
+/* Target the lockup view model container */
+.yt-music-mode yt-lockup-view-model {
+    --yt-lockup-thumbnail-width: 80px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Target the thumbnail link wrapper */
+.yt-music-mode yt-lockup-view-model a.yt-lockup-view-model__content-image {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    height: 45px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Target the metadata/text container */
+.yt-music-mode .yt-lockup-view-model__content-data {
+    padding-left: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+}
+
+/* Fix title size in the new structure */
+.yt-music-mode .yt-lockup-metadata-view-model-wiz__title {
+    font-size: 1.2rem !important;
+    /* YouTube uses rem/em in the new structure */
+    line-height: 1.4rem !important;
+    max-height: 2.8rem !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+}
+
+/* Target yt-thumbnail-view-model (regular videos) */
+.yt-music-mode yt-thumbnail-view-model {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    height: 45px !important;
+    min-height: 45px !important;
+}
+
+/* Target yt-collection-thumbnail-view-model (mixes/playlists) */
+.yt-music-mode yt-collection-thumbnail-view-model {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    height: 45px !important;
+    min-height: 45px !important;
+}
+
+/* Target the actual images */
+.yt-music-mode yt-lockup-view-model .ytThumbnailViewModelImage img,
+.yt-music-mode yt-thumbnail-view-model img,
+.yt-music-mode yt-collection-thumbnail-view-model img,
+.yt-music-mode .yt-core-image {
+    width: 80px !important;
+    height: 45px !important;
+    object-fit: cover !important;
+}
+
+/* Legacy support: ytd-compact-video-renderer (older YouTube versions) */
+.yt-music-mode ytd-compact-video-renderer ytd-thumbnail,
+.yt-music-mode ytd-compact-video-renderer #thumbnail {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    height: 45px !important;
+    min-height: 45px !important;
+}
+
+.yt-music-mode ytd-compact-video-renderer {
+    --yt-img-max-width: 80px !important;
+}
+
+/* Playlist panel on the right side */
+.yt-music-mode ytd-playlist-panel-video-renderer ytd-thumbnail,
+.yt-music-mode ytd-playlist-panel-video-renderer #thumbnail {
+    width: 60px !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+}
+
+.yt-music-mode ytd-playlist-panel-video-renderer #container {
+    height: auto !important;
+}
+
+/* Search results */
+.yt-music-mode ytd-video-renderer ytd-thumbnail,
+.yt-music-mode ytd-video-renderer #thumbnail {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    height: 68px !important;
+    min-height: 68px !important;
+}
+
+/* Home page video grid */
+.yt-music-mode ytd-rich-item-renderer ytd-thumbnail,
+.yt-music-mode ytd-rich-item-renderer #thumbnail {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    height: 68px !important;
+    min-height: 68px !important;
+}
+
+.yt-music-mode ytd-rich-item-renderer {
+    width: auto !important;
+    max-width: 200px !important;
+}
+
+/* Adjust grid layout for smaller thumbnails */
+.yt-music-mode ytd-rich-grid-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.yt-music-mode #contents.ytd-rich-grid-renderer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+/* Channel page videos */
+.yt-music-mode ytd-grid-video-renderer ytd-thumbnail,
+.yt-music-mode ytd-grid-video-renderer #thumbnail {
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+}
+
+/* Shorts in recommendations - make them smaller too */
+.yt-music-mode ytd-reel-item-renderer {
+    width: 80px !important;
+    max-width: 80px !important;
+}
+
+.yt-music-mode ytd-reel-item-renderer #thumbnail {
+    height: 120px !important;
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+
+.yt-music-mode ytd-thumbnail,
+.yt-music-mode #thumbnail,
+.yt-music-mode video,
+.yt-music-mode #movie_player {
+    transition: all 0.3s ease !important;
+}
+
+/* ============================================
+   ENSURE TEXT REMAINS READABLE
+   ============================================ */
+
+/* Adjust text size for smaller thumbnails */
+.yt-music-mode ytd-compact-video-renderer #video-title {
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    max-height: 3.9em !important;
+}
+
+.yt-music-mode ytd-compact-video-renderer #metadata-line {
+    font-size: 10px !important;
+}
+
+.yt-music-mode ytd-playlist-panel-video-renderer #video-title {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+}
+
+/* ============================================
+   MINI PLAYER ADJUSTMENTS
+   ============================================ */
+
+.yt-music-mode .ytp-miniplayer-ui video {
+    opacity: 1 !important;
+    /* Show video in miniplayer */
+}
+
+/* ============================================
+   HIDE PREVIEW ON HOVER
+   ============================================ */
+
+.yt-music-mode ytd-thumbnail #mouseover-overlay,
+.yt-music-mode ytd-thumbnail .ytd-thumbnail-overlay-toggle-button-renderer {
+    display: none !important;
+}
